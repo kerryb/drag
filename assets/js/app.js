@@ -23,7 +23,40 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+
+let Hooks = {}
+
+Hooks.Draggable = {
+  mounted(){
+    this.el.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text/plain", e.target.dataset.id)
+      document.getElementById(e.target.dataset.dropTarget).classList.add("ring")
+    })
+    this.el.addEventListener("dragend", e => {
+      document.getElementById(e.target.dataset.dropTarget).classList.remove("ring")
+    })
+  }
+}
+
+Hooks.DragTarget = {
+  mounted(){
+    this.el.addEventListener("dragover", e => {
+      e.srcElement.classList.add("ring-offset-2", "border-red-500")
+      e.preventDefault()
+    })
+    this.el.addEventListener("dragleave", e => {
+      e.srcElement.classList.remove("ring-offset-2", "ring-2")
+      e.preventDefault()
+    })
+    this.el.addEventListener("drop", e => {
+      e.srcElement.classList.remove("ring-offset-2", "ring-2")
+      this.pushEvent("drop", {id: e.dataTransfer.getData("text")})
+      e.preventDefault()
+    })
+  }
+}
+
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})

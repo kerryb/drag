@@ -1,0 +1,18 @@
+<ul id="target" class="relative w-28 h-28 m-10 ml-0 bg-red-300" phx-hook="DragTarget">
+  <li
+    :for={{card, index} <- Enum.with_index(@cards_on_table)}
+    id={"card-#{card.id}"}
+    class={["absolute w-16 h-16 bg-green-300 border border-green-600", offset(index)]}
+  />
+</ul>
+<ul class="flex">
+  <li
+    :for={card <- Map.values(@cards_in_hand)}
+    id={"card-#{card.id}"}
+    class="w-16 h-16 mr-6 bg-green-300 border border-green-600"
+    draggable="true"
+    data-drop-target="target"
+    data-id={card.id}
+    phx-hook="Draggable"
+  />
+</ul>
