@@ -32,9 +32,6 @@ Hooks.Draggable = {
       e.dataTransfer.setData("text/plain", e.target.dataset.id)
       document.getElementById(e.target.dataset.dropTarget).classList.add("ring")
     })
-    this.el.addEventListener("dragend", e => {
-      document.getElementById(e.target.dataset.dropTarget).classList.remove("ring")
-    })
   }
 }
 
@@ -49,7 +46,6 @@ Hooks.DragTarget = {
       e.preventDefault()
     })
     this.el.addEventListener("drop", e => {
-      e.srcElement.classList.remove("ring-offset-2", "ring-2")
       this.pushEvent("drop", {id: e.dataTransfer.getData("text")})
       e.preventDefault()
     })
