@@ -21,6 +21,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import autoAnimate from "../vendor/auto-animate"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
@@ -49,6 +50,12 @@ Hooks.DragTarget = {
       this.pushEvent("drop", {id: e.dataTransfer.getData("text")})
       e.preventDefault()
     })
+  }
+}
+
+Hooks.AutoAnimate = {
+  mounted(){
+    autoAnimate(this.el)
   }
 }
 

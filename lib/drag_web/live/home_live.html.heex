@@ -16,14 +16,14 @@
     phx-hook="Draggable"
   />
 </ul>
-<ul id="opponent" class="relative w-28 h-28 m-10 ml-0 bg-red-300">
+<ul id="opponent" class="relative w-28 h-28 m-10 ml-0 bg-red-300" phx-hook="AutoAnimate">
   <li
     :for={{card, index} <- Enum.with_index(@opponent_cards_on_table)}
     id={"card-#{card.id}"}
     class={["absolute w-16 h-16 bg-green-300 border border-green-600", offset(index)]}
   />
 </ul>
-<ul class="flex">
+<ul id="opponent-target" class="flex" phx-hook="AutoAnimate">
   <li
     :for={card <- Map.values(@opponent_cards_in_hand)}
     id={"card-#{card.id}"}
