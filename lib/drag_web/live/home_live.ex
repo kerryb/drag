@@ -5,7 +5,7 @@ defmodule DragWeb.HomeLive do
 
   defmodule Card do
     @enforce_keys [:id]
-    defstruct [:id]
+    defstruct id: nil, x: 0, y: 0
   end
 
   @impl LiveView
@@ -34,6 +34,25 @@ defmodule DragWeb.HomeLive do
      |> update(:cards_on_table, &[card | &1])
      |> update(:opponent_cards_on_table, &[opponent_card | &1])}
   end
+
+  def handle_event("drag", %{"id" => id} = params, socket) do
+    id = String.to_integer(id)
+
+    case socket.assigns.cards_in_hand[id] do
+      nil ->
+        {:noreply, socket}
+
+      card ->
+        {:noreply,
+         update(
+           socket,
+           :cards_in_hand,
+           &Map.replace(&1, id, %{card | x: params["x"], y: params["y"]})
+         )}
+    end
+  end
+
+  def handle_event("drag", _params, socket), do: {:noreply, socket}
 
   defp offset(0), do: "top-[10px] left-[10px]"
   defp offset(1), do: "top-[20px] left-[20px]"

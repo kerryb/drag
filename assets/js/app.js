@@ -29,9 +29,25 @@ let Hooks = {}
 
 Hooks.Draggable = {
   mounted(){
+    // var debounceTimer;
+    var time = Date.now()
+    var x
+    var y
     this.el.addEventListener("dragstart", e => {
+      x = e.offsetX
+      y = e.offsetY
       e.dataTransfer.setData("text/plain", e.target.dataset.id)
       document.getElementById(e.target.dataset.dropTarget).classList.add("ring")
+    })
+    this.el.addEventListener("drag", e => {
+      if ((Date.now() - time) > 50) {
+        this.pushEvent("drag", {id: e.target.dataset.id, x: e.offsetX - x, y: e.offsetY - y})
+        time = Date.now()
+      }
+    })
+    this.el.addEventListener("dragend", e => {
+      console.log(e)
+      this.pushEvent("drag", {id: e.srcElement.dataset.id, x: 0, y: 0})
     })
   }
 }
